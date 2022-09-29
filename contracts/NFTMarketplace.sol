@@ -2,6 +2,7 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 error NFTMarketplace__PriceMustBeAboveZero();
 error NFTMarketplace__NotApprovedForMarketplace();
@@ -16,7 +17,7 @@ error NFTMarketplace__PriceNotMet(
 error NFTMarketplace__NoProceeds();
 error NFTMarketplace__TransferProceedsFailed();
 
-contract NFTMarketplace {
+contract NFTMarketplace is ReentrancyGuard {
     struct Listing {
         uint256 price;
         address seller;
@@ -76,6 +77,8 @@ contract NFTMarketplace {
     // Seller address -> Earned amount
     mapping(address => uint256) private s_proceeds;
 
+    // * MAIN FUNCTION
+
     /// @notice Method for listign your NFT on the marketplace
     /// @dev We could have the contract be the escow for the NFTs
     /// but as this way, owner can still hold their NFTs when listed
@@ -107,6 +110,7 @@ contract NFTMarketplace {
     function buyItem(address nftAddress, uint256 tokenId)
         external
         payable
+        nonReentrant
         isListed(nftAddress, tokenId)
     {
         Listing memory listedItem = s_listings[nftAddress][tokenId];
@@ -159,5 +163,19 @@ contract NFTMarketplace {
         if (!success) {
             revert NFTMarketplace__TransferProceedsFailed();
         }
+    }
+
+    // * GETTER FUNCTION
+
+    function getListing(address nftAddress, uint256 tokenId)
+        external
+        view
+        returns (Listing memory)
+    {
+        return s_listings[nftAddress][tokenId];
+    }
+
+    function getProceed(address seller) external view returns (uint256) {
+        return s_proceeds[seller];
     }
 }
