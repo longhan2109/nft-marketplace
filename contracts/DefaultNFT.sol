@@ -7,7 +7,7 @@ error DefaultNFT__TokenNotExisted(uint256 tokenId);
 
 contract DefaultNFT is ERC721 {
     string public constant TOKEN_URI =
-        "ipfs://QmdryoExpgEQQQgJPoruwGJyZmz6SqV4FRTX1i73CT3iXn";
+        "ipfs://bafybeig37ioir76s7mg5oobetncojcm3c3hxasyd4rvid4jqhy4gkaheg4/?filename=0-PUG.json";
     uint256 private s_tokenCounter;
 
     event DogMinted(uint256 indexed tokenId);
