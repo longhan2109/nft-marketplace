@@ -30,7 +30,7 @@ contract NFTMarket is ERC721URIStorage {
     constructor() ERC721("Long Token", "NLG") {}
 
     /* Mints a token and lists it in the marketplace */
-    function createToken(string memory tokenURI, uint256 price)
+    function createToken(string memory tokenURI)
         public
         payable
         returns (uint256)
@@ -40,11 +40,11 @@ contract NFTMarket is ERC721URIStorage {
 
         _mint(msg.sender, newTokenId);
         _setTokenURI(newTokenId, tokenURI);
-        createMarketItem(newTokenId, price);
+        // createMarketItem(newTokenId, price);
         return newTokenId;
     }
 
-    function createMarketItem(uint256 tokenId, uint256 price) private {
+    function list(uint256 tokenId, uint256 price) private {
         require(price > 0, "Price must be at least 1 wei");
 
         idToMarketItem[tokenId] = MarketItem(
@@ -96,6 +96,8 @@ contract NFTMarket is ERC721URIStorage {
         _transfer(address(this), msg.sender, tokenId);
         payable(idToMarketItem[tokenId].seller).transfer(msg.value);
     }
+
+    function unlist(uint256 tokenId) public {}
 
     /* Returns all unsold market items */
     function fetchMarketItems() public view returns (MarketItem[] memory) {
