@@ -5,7 +5,7 @@ const main = async () => {
   console.log("Deploying contracts with the account:", deployer.address);
   console.log("Account balance:", (await deployer.getBalance()).toString());
 
-  const contract = await ethers.getContractFactory("DefaultNFT");
+  const contract = await ethers.getContractFactory("Floppy");
   const deployedContract = await contract.deploy();
 
   await deployedContract.deployed();
